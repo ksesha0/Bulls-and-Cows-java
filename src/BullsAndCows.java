@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
 public class BullsAndCows extends JFrame{
@@ -92,6 +96,21 @@ public class BullsAndCows extends JFrame{
 		
 		//设置控件属性
 		textResult.setEditable(false);
+		//限制4个编辑框只能输出数字
+		for( JTextField t:textInputs ){
+			t.addKeyListener(new KeyListener(){
+				@Override
+				public void keyPressed(KeyEvent arg0) {}
+				@Override
+				public void keyReleased(KeyEvent arg0) {}
+				@Override
+				public void keyTyped(KeyEvent arg0) {
+					if(Character.isDigit(arg0.getKeyChar()) == false){
+						arg0.consume();
+					}
+				}				
+			});
+		}
 		setSize(500,500);
 		setVisible(true);			        
 	}
