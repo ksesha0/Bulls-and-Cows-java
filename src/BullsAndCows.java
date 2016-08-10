@@ -4,11 +4,14 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyEvent.*;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.FocusManager;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -94,25 +97,42 @@ public class BullsAndCows extends JFrame{
                     }
         });
 		
+        
 		//设置控件属性
 		textResult.setEditable(false);
 		//限制4个编辑框只能输出数字
 		for( JTextField t:textInputs ){
 			t.addKeyListener(new KeyListener(){
 				@Override
-				public void keyPressed(KeyEvent arg0) {}
+				public void keyPressed(KeyEvent arg0) {
+					//按 BACK-SPACE 键，如果当前编辑框为空，那么就退回到上一个编辑框，发送shift+tab 消息回去
+					if(arg0.getKeyChar() == KeyEvent.VK_BACK_SPACE && t != textInputs[0] && t.getText().equals("")){								
+						KeyEvent ke = new KeyEvent(t,KeyEvent.KEY_PRESSED,0,1,KeyEvent.VK_TAB,KeyEvent.CHAR_UNDEFINED);
+						t.dispatchEvent(ke);
+					}
+				}
 				@Override
 				public void keyReleased(KeyEvent arg0) {}
 				@Override
 				public void keyTyped(KeyEvent arg0) {
-					if(Character.isDigit(arg0.getKeyChar()) == false){
+					//这段代码不能放在 keyPressed 上，否则无法在编辑框上显示
+					if(Character.isDigit(arg0.getKeyChar()) == false){	
 						arg0.consume();
+					}else {		
+						t.setText("");
+						//没输入一次，切换到下一格
+						if(t != textInputs[textInputs.length - 1]){
+							KeyEvent ke = new KeyEvent(t,KeyEvent.KEY_PRESSED,0,0,KeyEvent.VK_TAB,KeyEvent.CHAR_UNDEFINED);
+							t.dispatchEvent(ke);											
+						}
 					}
 				}				
 			});
-		}
+		}					
 		setSize(500,500);
-		setVisible(true);			        
+		setVisible(true);	
+		//编辑框获取焦点
+		textInputs[0].requestFocus();
 	}
 	public static void main(String[] args) {
 		new BullsAndCows();
