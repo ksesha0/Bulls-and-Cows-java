@@ -152,6 +152,14 @@ System.out.println("EnterPressed");
 		}
 		
 		//…Ë÷√øÿº˛ Ù–‘
+		textResult.setFocusable(false);
+		buttonNewGame.setFocusable(false);
+		buttonQuit.setFocusable(false);
+		labelResult.setFocusable(false);
+		labelTime.setFocusable(false);
+		labelInput.setFocusable(false);
+		buttonInput.setFocusable(false);
+		
 		textResult.setEditable(false);
 		setSize(500,500);
 		setVisible(true);	
