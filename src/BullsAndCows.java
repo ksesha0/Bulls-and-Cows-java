@@ -49,38 +49,46 @@ public class BullsAndCows extends JFrame{
 	void iniGame(){
 		for(int i = 0 ; i < nums.length;++i){
 			nums[i] = random.nextInt(10);
+System.out.print(nums[i]);
 		}
-System.out.println("初始化：");
-for(int i = 0 ; i < nums.length;++i){
-	System.out.println(nums[i]);
-}
 		textResult.setText("\tGuess\tResult\n");
 		cntTimes = 0;		
 	}
-	void GameOver(){}
-	void judgeGame(){		
-		if(++cntTimes > cntMaxTimes){
-			GameOver();
-			return ;
-		}			
+	
+	void gameOver(boolean isWin){
+		if(isWin){
+			labelResult.setText("GameOver：你赢了！");
+			textResult.setText(textResult.getText() + "GameOver：你赢了！\n");
+		}else {
+			labelResult.setText("GameOver：超过" + cntMaxTimes + "次\n");
+		}
+	}
+	
+	void judgeGame(){
+		//获取填空
 		for(int i = 0 ; i < 4;++i){		
 			try{
 				numInput[i] = Integer.parseInt(textInputs[i].getText());
 			}catch (NumberFormatException e){
-				textResult.setText(textResult.getText() + "请输出完全数字\n");
+				labelResult.setText("请输入数字并填完所有空\n");
 				return ;
 			}
 		}
-		
+		//计次
+		if(++cntTimes > cntMaxTimes){
+			gameOver(false);
+			return ;
+		}	
+		//判断是否正确
 		if(Arrays.equals(nums, numInput)){
-System.out.println("答案正确");			
+			gameOver(true);
 		}else {
+			//不正确，输出判断结果
 			calInput();		
 		}		
 	}
 	
 	void calInput(){
-System.out.println("calInput");
 		int cntA = 0,cntB = 0;
 		boolean vis[] = new boolean[]{false,false,false,false};		
 		for(int i = 0 ; i < 4 ; ++i){
@@ -107,7 +115,7 @@ System.out.println("calInput");
 		str += "\t" + cntA + "A" + cntB + "B\n";
 		textResult.setText(str);		
 	}
-	
+
 	void setControlPos(int gridx,int gridy,int gridwidth,double weightx,double weighty, Component comp ,GridBagLayout gbLayout ){
 		GridBagConstraints gbConstraint= new GridBagConstraints();
 		gbConstraint.fill =  GridBagConstraints.BOTH;
@@ -147,9 +155,9 @@ System.out.println("calInput");
 			panelInput.add(t);
 		}		
 		panelInput.add(buttonInput);		
-		panelCenter.add(textResult);			
-		panelSouth.add(labelTime);	
+		panelCenter.add(textResult);
 		panelSouth.add(labelResult);
+		panelSouth.add(labelTime);	
 		
 		//Input 块内布局
 		GridBagLayout gbLayoutInput= new GridBagLayout();
@@ -171,21 +179,18 @@ System.out.println("calInput");
         buttonNewGame.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-System.out.println("buttonNewGame");
 				iniGame();
 			}});
         
         buttonQuit.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-System.out.println("Quit");
 				System.exit(0);
 			}});
                 
         buttonInput.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-System.out.println("buttonInput");
 				judgeGame();
 			}});
         
@@ -200,7 +205,6 @@ System.out.println("buttonInput");
 						KeyEvent ke = new KeyEvent(t,KeyEvent.KEY_PRESSED,0,1,KeyEvent.VK_TAB,KeyEvent.CHAR_UNDEFINED);
 						t.dispatchEvent(ke);
 					}else if( arg0.getKeyChar() == KeyEvent.VK_ENTER ){
-System.out.println("EnterPressed");
 						judgeGame();
 					}
 				}
