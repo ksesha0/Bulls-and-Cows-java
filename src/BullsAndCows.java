@@ -47,58 +47,67 @@ public class BullsAndCows extends JFrame{
 	int cntTimes;
 	final int cntMaxTimes = 8;
 	Random random = new Random();
-	
+	//计时
 	int cntTime,delay = 1000;
 	Timer timer = new Timer();
 	QhyTimerTask task = new  QhyTimerTask();
-	boolean isCountTime;
+	boolean isCountTime,isGameOver;
 	
+	//初始化游戏
 	void iniGame(){
+		//生成随机4个数
 		for(int i = 0 ; i < nums.length;++i){
 			nums[i] = random.nextInt(10);
 System.out.print(nums[i]);
 		}
+		//输出各种状态
 		textResult.setText("Times\tGuess\tResult\n");
 		cntTimes = 0;	
-		cntTime = 0;
-		isCountTime = true;		
+		cntTime = -1;
+		isCountTime = true;				
 		labelResult.setText("游戏已经开始!");
 	}
 	
 	void gameOver(boolean isWin){
+		//游戏结束
 		isCountTime = false;
 		if(isWin){
 			labelResult.setText("GameOver：你赢了！");
-			textResult.setText(textResult.getText() + "GameOver：你赢了！\n");
+			textResult.setText(textResult.getText() + "GameOver：你赢了！\t 耗时:" + cntTime + "s\n" );
 		}else {
+			textResult.setText(textResult.getText()  + "GameOver：超过" + cntMaxTimes + "次\t 耗时:" + cntTime + "s\n" );
 			labelResult.setText("GameOver：超过" + cntMaxTimes + "次\n");
 		}
 	}
 	
+	//判断输入和输赢
 	void judgeGame(){
-		//获取填空
-		for(int i = 0 ; i < 4;++i){		
-			try{
-				numInput[i] = Integer.parseInt(textInputs[i].getText());
-			}catch (NumberFormatException e){
-				labelResult.setText("请输入数字并填完所有空\n");
-				return ;
+		if(isCountTime){
+			//获取填空
+			for(int i = 0 ; i < 4;++i){		
+				try{
+					numInput[i] = Integer.parseInt(textInputs[i].getText());
+				}catch (NumberFormatException e){
+					labelResult.setText("请输入数字并填完所有空\n");
+					return ;
+				}
 			}
+			//计次
+			if(++cntTimes > cntMaxTimes){
+				gameOver(false);
+				return ;
+			}	
+			//判断是否正确
+			if(Arrays.equals(nums, numInput)){
+				gameOver(true);
+			}else {
+				//不正确，输出判断结果
+				calInput();		
+			}		
 		}
-		//计次
-		if(++cntTimes > cntMaxTimes){
-			gameOver(false);
-			return ;
-		}	
-		//判断是否正确
-		if(Arrays.equals(nums, numInput)){
-			gameOver(true);
-		}else {
-			//不正确，输出判断结果
-			calInput();		
-		}		
 	}
 	
+	//判断输的结果
 	void calInput(){
 		int cntA = 0,cntB = 0;
 		boolean vis[] = new boolean[]{false,false,false,false};		
@@ -260,7 +269,7 @@ System.out.print(nums[i]);
 		@Override
 		public void run() {
 			if(isCountTime){
-				labelTime.setText("时间:\t" + cntTime++ + "\ts");
+				labelTime.setText("时间:\t" + ++cntTime + "\ts");
 			}
 		}
 	}
