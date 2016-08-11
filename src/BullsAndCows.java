@@ -58,14 +58,16 @@ public class BullsAndCows extends JFrame{
 		//生成随机4个数
 		for(int i = 0 ; i < nums.length;++i){
 			nums[i] = random.nextInt(10);
+			textInputs[i].setText("");
 System.out.print(nums[i]);
 		}
+		textInputs[0].requestFocus();
 		//输出各种状态
 		textResult.setText("Times\tGuess\tResult\n");
 		cntTimes = 0;	
 		cntTime = -1;
 		isCountTime = true;				
-		labelResult.setText("游戏已经开始!");
+		labelResult.setText("游戏已经开始!");		
 	}
 	
 	void gameOver(boolean isWin){
@@ -260,7 +262,6 @@ System.out.print(nums[i]);
 		setSize(500,500);
 		setVisible(true);	
 		//编辑框获取焦点
-		textInputs[0].requestFocus();
 		timer.scheduleAtFixedRate(task, 0, delay);
 		iniGame();
 	}
