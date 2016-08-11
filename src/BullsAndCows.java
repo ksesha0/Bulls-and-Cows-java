@@ -14,6 +14,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.FocusManager;
 import javax.swing.JButton;
@@ -27,13 +29,12 @@ import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
 public class BullsAndCows extends JFrame{
-	
 	//各种控件
 	JButton buttonNewGame = new JButton("新游戏");
 	JButton buttonQuit = new JButton("退出");
 			
-	JLabel labelResult = new JLabel("这是结果");
-	JLabel labelTime = new JLabel("时间");
+	JLabel labelResult = new JLabel("游戏开始!");
+	JLabel labelTime = new JLabel("时间:");
 	
 	JLabel labelInput = new JLabel("Input:");
 	JTextField textInputs[] = new JTextField[]{new JTextField(""),new JTextField(""),new JTextField(""),new JTextField("")};
@@ -46,16 +47,26 @@ public class BullsAndCows extends JFrame{
 	int cntTimes;
 	final int cntMaxTimes = 8;
 	Random random = new Random();
+	
+	int cntTime,delay = 1000;
+	Timer timer = new Timer();
+	QhyTimerTask task = new  QhyTimerTask();
+	boolean isCountTime;
+	
 	void iniGame(){
 		for(int i = 0 ; i < nums.length;++i){
 			nums[i] = random.nextInt(10);
 System.out.print(nums[i]);
 		}
-		textResult.setText("\tGuess\tResult\n");
-		cntTimes = 0;		
+		textResult.setText("Times\tGuess\tResult\n");
+		cntTimes = 0;	
+		cntTime = 0;
+		isCountTime = true;		
+		labelResult.setText("游戏已经开始!");
 	}
 	
 	void gameOver(boolean isWin){
+		isCountTime = false;
 		if(isWin){
 			labelResult.setText("GameOver：你赢了！");
 			textResult.setText(textResult.getText() + "GameOver：你赢了！\n");
@@ -241,11 +252,22 @@ System.out.print(nums[i]);
 		setVisible(true);	
 		//编辑框获取焦点
 		textInputs[0].requestFocus();
+		timer.scheduleAtFixedRate(task, 0, delay);
 		iniGame();
+	}
+	
+	class QhyTimerTask extends TimerTask{
+		@Override
+		public void run() {
+			if(isCountTime){
+				labelTime.setText("时间:\t" + cntTime++ + "\ts");
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
 		new BullsAndCows();
 	}
+	
 
 }
