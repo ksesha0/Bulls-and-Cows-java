@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent.*;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
+import java.util.Random;
 
 import javax.swing.FocusManager;
 import javax.swing.JButton;
@@ -38,7 +40,74 @@ public class BullsAndCows extends JFrame{
 	JButton buttonInput = new JButton("ok");
 	
 	JTextArea textResult = new JTextArea("");
+	
+	int nums[] = new int[4];
+	int numInput[] = new int[4];
+	int cntTimes;
+	final int cntMaxTimes = 8;
+	Random random = new Random();
+	void iniGame(){
+		for(int i = 0 ; i < nums.length;++i){
+			nums[i] = random.nextInt(10);
+		}
+System.out.println("初始化：");
+for(int i = 0 ; i < nums.length;++i){
+	System.out.println(nums[i]);
+}
+		textResult.setText("\tGuess\tResult\n");
+		cntTimes = 0;		
+	}
+	void GameOver(){}
+	void judgeGame(){		
+		if(++cntTimes > cntMaxTimes){
+			GameOver();
+			return ;
+		}			
+		for(int i = 0 ; i < 4;++i){		
+			try{
+				numInput[i] = Integer.parseInt(textInputs[i].getText());
+			}catch (NumberFormatException e){
+				textResult.setText(textResult.getText() + "请输出完全数字\n");
+				return ;
+			}
+		}
 		
+		if(Arrays.equals(nums, numInput)){
+System.out.println("答案正确");			
+		}else {
+			calInput();		
+		}		
+	}
+	
+	void calInput(){
+System.out.println("calInput");
+		int cntA = 0,cntB = 0;
+		boolean vis[] = new boolean[]{false,false,false,false};		
+		for(int i = 0 ; i < 4 ; ++i){
+			if(numInput[i] == nums[i]){	
+				vis[i] = true;
+				++cntA;				
+			}
+		}
+		
+		for(int i = 0 ; i < 4 ; ++i){
+			if(numInput[i] != nums[i]){
+				for(int j = 0 ; j < 4 ; ++j){
+					if(vis[j] == false && numInput[i] == nums[j]){
+						++cntB;
+						vis[j] = true;
+					}
+				}
+			}
+		}
+		String str = textResult.getText() + cntTimes + "\t";
+		for(int i = 0 ; i < 4 ; ++i){
+			str += numInput[i];
+		}
+		str += "\t" + cntA + "A" + cntB + "B\n";
+		textResult.setText(str);		
+	}
+	
 	void setControlPos(int gridx,int gridy,int gridwidth,double weightx,double weighty, Component comp ,GridBagLayout gbLayout ){
 		GridBagConstraints gbConstraint= new GridBagConstraints();
 		gbConstraint.fill =  GridBagConstraints.BOTH;
@@ -103,6 +172,7 @@ public class BullsAndCows extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 System.out.println("buttonNewGame");
+				iniGame();
 			}});
         
         buttonQuit.addActionListener(new ActionListener(){
@@ -116,6 +186,7 @@ System.out.println("Quit");
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 System.out.println("buttonInput");
+				judgeGame();
 			}});
         
         		
@@ -130,6 +201,7 @@ System.out.println("buttonInput");
 						t.dispatchEvent(ke);
 					}else if( arg0.getKeyChar() == KeyEvent.VK_ENTER ){
 System.out.println("EnterPressed");
+						judgeGame();
 					}
 				}
 				@Override
@@ -165,7 +237,9 @@ System.out.println("EnterPressed");
 		setVisible(true);	
 		//编辑框获取焦点
 		textInputs[0].requestFocus();
+		iniGame();
 	}
+	
 	public static void main(String[] args) {
 		new BullsAndCows();
 	}
