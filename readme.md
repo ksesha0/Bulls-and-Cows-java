@@ -1,5 +1,6 @@
 # Bulls and Cows 猜数字游戏
 游戏规则：xAyB 表示有x个数字的位置是对的，y个数字位置不对，但是数字对
+![show](https://raw.githubusercontent.com/285571052/Bulls-and-Cows-java/master/show.png)
 
 # 知识点
 ## GUI 布局
