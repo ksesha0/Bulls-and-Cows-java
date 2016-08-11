@@ -29,7 +29,7 @@ import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
 public class BullsAndCows extends JFrame{
-	//各种控件
+	//各种控件.
 	JButton buttonNewGame = new JButton("新游戏");
 	JButton buttonQuit = new JButton("退出");
 			
